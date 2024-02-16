@@ -21,7 +21,10 @@ const checkAuth = async (req, res, next) => {
             token,
             process.env.JWT_SECRET
         ));
-        req.user = user.email;
+        req.user = {
+            email: user.email,
+            userId: user.userId,
+        }
         next()
     } catch (error) {
         return res.status(401).json({

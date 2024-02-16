@@ -1,4 +1,4 @@
-import * as React from "react";
+import React,{useEffect} from "react";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -9,8 +9,22 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
+import {updateTask} from '../api/tasks'
 
-export default function EditTask({ open, handleClose }) {
+export default function EditTask({ open, handleClose, task }) {
+  const [updatedTask, setUpdatedTask] = React.useState(task);
+ 
+  const handleChange = (e) => {
+    setUpdatedTask({ ...updatedTask, title: e.target.value });
+  }
+  const handleSave = async () => {
+    await updateTask(updatedTask._id, updatedTask);
+    handleClose();
+    alert("Task updated Successfully", updatedTask.title);
+  }
+  useEffect(() => {
+    setUpdatedTask(task);
+  },[task])
   return (
     <React.Fragment>
       <Dialog
@@ -34,10 +48,10 @@ export default function EditTask({ open, handleClose }) {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <TextField fullWidth sx={{ minWidth: "500px" }} minWidth={800} />
+          <TextField fullWidth sx={{ minWidth: "500px" }} onChange={handleChange} value={updatedTask.title} name="title" minWidth={800} />
         </DialogContent>
         <DialogActions>
-          <Button autoFocus variant="contained" onClick={handleClose}>
+          <Button autoFocus variant="contained" onClick={()=>handleSave()} >
             Save 
           </Button>
         </DialogActions>

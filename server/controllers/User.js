@@ -13,15 +13,16 @@ const register = async (req, res) => {
       };
     });
 
-    return res.json({ errors, data: null });
+    return res.status(400).json({ errors, data: null });
   }
 
   const { name, email, password } = req.body;
 
+
   const user = await User.findOne({ email });
 
   if (user) {
-    return res.json({
+    return res.status(400).json({
       errors: [
         {
           msg: 'Email already in use',
@@ -41,11 +42,11 @@ const register = async (req, res) => {
 
   });
 
-  const token = await JWT.sign({ email: newUser.email }, process.env.JWT_SECRET, {
+  const token = await JWT.sign({ email: newUser.email,userId:newUser._id }, process.env.JWT_SECRET, {
     expiresIn: 360000,
   });
 
-  res.json({
+  res.status(200).json({
     errors: [],
     data: {
       token,
@@ -60,13 +61,12 @@ const register = async (req, res) => {
 };
 const login = async (req, res) => {
   const { email, password } = req.body;
-
   const user = await User.findOne({ email });
   if (!user) {
-    return res.json({
+    return res.status(404).json({
       errors: [
         {
-          msg: 'User or Company Not Exist!',
+          msg: 'User Not Exist!',
         },
       ],
       data: null,
@@ -76,7 +76,7 @@ const login = async (req, res) => {
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    return res.json({
+    return res.status(400).json({
       errors: [
         {
           msg: 'invalid credentials',
@@ -86,11 +86,11 @@ const login = async (req, res) => {
     });
   }
 
-  const token = await JWT.sign({ email: user.email }, process.env.JWT_SECRET, {
+  const token = await JWT.sign({ email: user.email ,userId:user._id}, process.env.JWT_SECRET, {
     expiresIn: 360000,
   });
 
-  return res.json({
+  return res.status(200).json({
     errors: [],
     data: {
       token,
@@ -101,9 +101,9 @@ const login = async (req, res) => {
 
 const me = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.user });
+    const user = await User.findOne({ email: req.user.email });
     if (user) {
-      return res.json({
+      return res.status(200).json({
         errors: [],
         data: {
           user,

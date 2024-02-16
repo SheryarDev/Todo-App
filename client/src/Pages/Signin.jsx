@@ -1,4 +1,4 @@
-import * as React from "react";
+import  React , { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,17 +12,28 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
+import { login } from "../api/auth";
+import { AuthContext } from '../context/auth';
+import { useNavigate } from "react-router-dom";
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  const { setUser } = useContext(AuthContext)
+  const navigate = useNavigate();
+  const handleSubmit =async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const userData={ email: data.get('email'), password: data.get('password') }
+    const response = await login(userData);
+    if(response.status===200){
+      navigate('/');
+      setUser({
+        _id: response?.data?.data?.userId,
+        name: response?.data?.data?.name ,
+        email: response?.data?.data?.email,
+      });
+      localStorage.setItem('token',response?.data?.data?.token)
+    }
   };
 
   return (
