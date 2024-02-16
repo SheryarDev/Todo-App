@@ -7,7 +7,7 @@ const  {
   login,
   me,
   DeleteUser,
-}=require("../controllers/Auth")
+}=require("../controllers/User")
 
 
 // ============ POST ROUTES ========================
