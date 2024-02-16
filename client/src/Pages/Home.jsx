@@ -26,8 +26,12 @@ const Home = () => {
 
   const handleAddTask = async (e) => {
     e.preventDefault();
-    const respo = await addTask(task);
 
+    const token = localStorage.getItem("token")
+    if (!token) {
+      alert("Plz Login First!")
+    }
+    await addTask(task);
     setTask({ title: "", isCompleted: false });
     alert("Task Added Successfully", task.title);
     fetchTasks();
