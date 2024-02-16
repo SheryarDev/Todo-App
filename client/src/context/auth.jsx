@@ -11,8 +11,7 @@ export const AuthProvider = ({ children }) => {
  
   useEffect(() => {
     const Getme = async () => {
-
-      console.log("response",response);
+      const response = await me();
       if (response) {
         setUser({
           _id: response?.data?.data?.user?._id,

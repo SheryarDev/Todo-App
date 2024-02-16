@@ -31,7 +31,7 @@ export default function Header() {
               component="div"
               sx={{ flexGrow: 1, mr: 2 }}
             >
-              {user.name}
+              {user?.name}
             </Typography>
             {!token ? (
               <Button
