@@ -28,9 +28,9 @@ export default function SignIn() {
     if(response.status===200){
       navigate('/');
       setUser({
-        _id: response?.data?.data?.userId,
-        name: response?.data?.data?.name ,
-        email: response?.data?.data?.email,
+        _id: response?.data?.data?.user._id,
+        name: response?.data?.data?.user.name ,
+        email: response?.data?.data?.user.email,
       });
       localStorage.setItem('token',response?.data?.data?.token)
     }

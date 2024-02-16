@@ -26,11 +26,6 @@ const Home = () => {
 
   const handleAddTask = async (e) => {
     e.preventDefault();
-
-    const token = localStorage.getItem("token")
-    if (!token) {
-      alert("Plz Login First!")
-    }
     await addTask(task);
     setTask({ title: "", isCompleted: false });
     alert("Task Added Successfully", task.title);
@@ -57,7 +52,11 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchTasks();
+    if (localStorage.getItem("token") === null) {
+      window.location.href = "/signin";
+    } else {
+      fetchTasks();
+    }
   }, [fetchTasks]);
 
   const handleMarkComplete = async (id, task) => {
